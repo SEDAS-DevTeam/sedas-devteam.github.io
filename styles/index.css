@@ -18,12 +18,13 @@ body{
     grid-template-rows: auto 1fr auto;
     min-height: 100%;
 
-    background: url("./res/sample-plane-background.png") no-repeat right top scroll;
+    background: url("../res/sample-plane-background.png") no-repeat right top scroll;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
 }
+
 
 a.nav-link{
     font-size: 20px;
@@ -33,4 +34,12 @@ a.nav-link{
 i{
     font-size: 20px;
     margin-right: 15px;
+}
+
+.active a.nav-link{
+    color: black;
+}
+
+a.navbar-brand{
+    cursor: default;
 }
