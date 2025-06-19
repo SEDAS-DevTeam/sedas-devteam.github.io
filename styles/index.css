@@ -29,6 +29,7 @@ body{
 a.nav-link{
     font-size: 20px;
     color: rgb(82, 113, 255);
+    cursor: pointer;
 }
 
 i{
