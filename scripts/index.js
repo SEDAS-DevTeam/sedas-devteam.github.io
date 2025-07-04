@@ -11,4 +11,9 @@ $(document).ready(() => {
         event.preventDefault()
         $("main").load("home.html");
     })
+
+    $("a#community").click((event) => {
+        event.preventDefault()
+        $("main").load("community.html");
+    })
 })

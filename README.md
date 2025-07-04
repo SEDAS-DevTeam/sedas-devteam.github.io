@@ -15,4 +15,4 @@ This is the main website for the SEDAS project, here, you can find redirects to 
 - [ ] Finish website structure
 - [ ] Add links to other parts of the project
 - [x] Add AJAX + jQuery so that the page loading will feel smoother
-- [xc] Add used tech stack here in README
+- [x] Add used tech stack here in README
