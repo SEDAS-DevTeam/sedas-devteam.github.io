@@ -22,4 +22,28 @@ class CustomFooter extends HTMLElement{
     }
 }
 
+class Container extends HTMLElement{
+    connectedCallback(){
+        let header_attr = this.getAttribute("head")
+        let text_attr = this.getAttribute("text")
+        let img_path = this.getAttribute("img-path")
+
+        this.innerHTML = `
+            <div class="bg-white text-dark rounded shadow border px-4 py-4 mt-3 container">
+                <div class="row align-items-center">
+                    <div class="col-12 col-sm-4 text-center mb-3 mb-sm-0">
+                        <img src="${img_path}" height="150" class="img-fluid">
+                    </div>
+                    <div class="col-12 col-sm-8 align-self-center" style="padding-left: 0.5rem;">
+                        <h4>${header_attr}</h4>
+                        <p>${text_attr}</p>
+                    </div>
+                </div>
+            </div>
+        `
+    }
+}
+
+
 customElements.define("custom-footer", CustomFooter)
+customElements.define("achieve-container", Container)

@@ -44,3 +44,22 @@ i{
 a.navbar-brand{
     cursor: default;
 }
+
+.navbar-toggler{
+    border-radius: 3px;
+    border: 2px solid #E8E8E8;
+}
+
+.navbar-toggler i{
+    color: rgb(118, 142, 248);
+}
+
+.rotate-90 {
+    transform: rotate(90deg);
+    transition: transform 0.3s ease;
+}
+
+.rotate-neg-90 {
+    transform: rotate(-0deg); /*WHAT*/
+    transition: transform 0.3s ease;
+}

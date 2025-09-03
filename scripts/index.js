@@ -16,4 +16,16 @@ $(document).ready(() => {
         event.preventDefault()
         $("main").load("community.html");
     })
+
+    const togglerIcon = $('button.navbar-toggler i.fa-bars');
+
+    // When the navbar is shown (expanded)
+    $('#navbarSupportedContent').on('show.bs.collapse', function() {
+        togglerIcon.removeClass('rotate-neg-90').addClass('rotate-90');
+    });
+
+    // When the navbar is hidden (collapsed)
+    $('#navbarSupportedContent').on('hide.bs.collapse', function() {
+        togglerIcon.removeClass('rotate-90').addClass('rotate-neg-90');
+    });
 })
