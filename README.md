@@ -11,6 +11,14 @@ This is the main website for the SEDAS project, here, you can find redirects to 
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 ![HTML](https://img.shields.io/badge/HTML-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
 
+## Local deployment
+To test some of the parts of the code, simply run these commands (You need to have Python3 installed)
+
+``` shell
+chmod +x ./server.py # make executable
+./server.py -p=8080 # serve on port 8080 (exits on KeyboardInterrupt - Ctrl+C)
+```
+
 ## TODO
 
 - [ ] Finish website structure
