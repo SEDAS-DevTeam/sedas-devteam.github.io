@@ -63,3 +63,13 @@ a.navbar-brand{
     transform: rotate(-0deg); /*WHAT*/
     transition: transform 0.3s ease;
 }
+
+.thumbnail img {
+    max-width: 30%;
+    max-height: 30%;
+
+    /* 'contain': Fits the whole image inside the box (best for icons).
+        'cover': Fills the box, but might crop parts of the image.
+    */
+    object-fit: contain;
+}

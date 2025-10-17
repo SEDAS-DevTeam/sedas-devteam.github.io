@@ -15,6 +15,11 @@ This is the main website for the SEDAS project, here, you can find redirects to 
 To test some of the parts of the code, simply run these commands (You need to have Python3 installed)
 
 ``` shell
+pyenv install 3.11
+pyenv virtualenv 3.11 sedas_devel_server # because we are using Livereload and Flask package, we need to create virtualenv
+pyenv local sedas_devel_server
+pip install -r requirements.txt
+
 chmod +x ./server.py # make executable
 ./server.py -p=8080 # serve on port 8080 (exits on KeyboardInterrupt - Ctrl+C)
 ```
@@ -22,6 +27,7 @@ chmod +x ./server.py # make executable
 ## TODO
 
 - [ ] Finish website structure
-- [ ] Add links to other parts of the project
+- [x] Add links to other parts of the project
 - [x] Add AJAX + jQuery so that the page loading will feel smoother
 - [x] Add used tech stack here in README
+- [ ] Add youtube logo to website
