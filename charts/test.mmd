@@ -1,0 +1,12 @@
+graph TD
+    subgraph "Version 1: Basic"
+        A1[Client] --> B1[Load Balancer]
+        B1 --> C1[Server1]
+        B1 --> D1[Server2]
+    end
+
+    subgraph "Version 2: Detailed Ports"
+        A2[Client] -->|tcp_123| B2(Load Balancer)
+        B2 -->|tcp_456| C2[Server1]
+        B2 -->|tcp_456| D2[Server2]
+    end

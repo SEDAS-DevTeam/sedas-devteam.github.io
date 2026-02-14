@@ -26,8 +26,11 @@ chmod +x ./server.py # make executable
 
 ## TODO
 
-- [ ] Finish website structure
+- [x] Finish website structure
 - [x] Add links to other parts of the project
 - [x] Add AJAX + jQuery so that the page loading will feel smoother
 - [x] Add used tech stack here in README
-- [ ] Add youtube logo to website
+- [x] Add youtube logo to website
+- [x] Implement scroll on codemap
+- [ ] Add loader in codemap
+- [ ] Implement custom buttons on svg-pan-zoom

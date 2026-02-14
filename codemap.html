@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>the SEDAS project - Code Map</title>
+        <link rel="icon" type="image/x-icon" href="./res/sedas-manager-logo-rounded.png">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.2/dist/svg-pan-zoom.min.js"></script>
+    </head>
+    <body class="codemap">
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light bg-white">
+                <a class="navbar-brand" href="#"><img class="ms-2" src="./res/sedas-manager-logo.png" alt="SEDAS manager logo" id="sedas-icn"></a>
+                <button class="navbar-toggler me-4" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="navbar-icon fa-solid fa-bars m-0 fs-2"></i>
+                </button>
+
+                <div class="collapse navbar-collapse me-4 ms-2" id="navbarSupportedContent">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <p class="nav-text ps-2 m-auto">SEDAS Code Map</p>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <nav class="navbar navbar-expand-lg navbar-light bg-white">
+                <button class="navbar-toggler me-4" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="navbar-icon fa-solid fa-bars m-0 fs-2"></i>
+                </button>
+
+                <div class="collapse navbar-collapse me-4 ms-2" id="navbarSupportedContent">
+                    <ul class="navbar-nav gap-2" id="codemap-nav">
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <pre class="mermaid bg-dark" id="map-container">
+        </pre>
+
+        <custom-footer></custom-footer>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="./scripts/components.js"></script>
+        <script src="./scripts/index.js"></script>
+        <link rel="stylesheet" href="./styles/index.css">
+
+        <script type="module">
+            async function load_diagram(button, diag_name) {
+                // Unactive all buttons
+                $(".nav-item-button").removeClass("active")
+                $(button).addClass("active")
+
+                console.log("Loading diagram", diag_name)
+                
+                const file_path = "./charts/" + diag_name
+                const res = await fetch(file_path)
+                const content = await res.text()
+                
+                const container = $("#map-container")
+                container.empty()
+
+                const id = 'svg-' + Math.round(Math.random() * 1000).toString()
+                const { svg } = await mermaid.render(id, content)
+                container.html(svg)
+
+                // Apply SVG pan zoom
+                const svg_element = document.querySelector(`svg#${id}`)
+                svg_element.removeAttribute("style")
+                svg_element.style.width = '100%'
+                svg_element.style.height = '100%'
+                svgPanZoom(svg_element, {
+                    zoomEnabled: true,
+                    controlIconsEnabled: true, // Adds +/- buttons
+                    zoomScaleSensitivity: 0.4,
+                    fit: true,
+                    center: true,
+                    minZoom: 0.1,
+                    maxZoom: 10
+                })
+
+                // Update URL without reloading page
+                window.history.pushState({}, '', `?file=${diag_name}`);
+            }
+
+            function load_button(head, name) {
+                let navbar = $("#codemap-nav")
+
+                let nav_item = $(`
+                    <li class="nav-item">
+                        <button class="py-2 px-3 nav-item-button">${head}</button>
+                    </li>
+                `)
+                nav_item.find("button").on("click", (elem) => {
+                    load_diagram(elem.target, `${name}`)   
+                })
+
+                navbar.append(nav_item)
+            }
+
+            import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs"
+            mermaid.initialize({ 
+                startOnLoad: false, 
+                theme: 'dark'
+            })
+
+            // Fetching manifest data
+            const res = await fetch("./manifest.json")
+            const data = await res.json()
+
+            data.forEach((elem) => {
+                // Preprocess filenames
+                let head = elem.replace(".mmd", "").replaceAll("-", " ")
+
+                load_button(head, elem)
+            })
+
+            // load the first diagram by default
+            $(".nav-item-button").first().trigger("click")
+        </script>
+    </body>
+</html>

@@ -15,8 +15,6 @@ class CustomFooter extends HTMLElement{
                     </div>
                 </div>
             </footer>
-
-            <link rel="stylesheet" href="./styles/index.css">
         `
     }
 }
