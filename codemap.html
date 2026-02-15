@@ -12,7 +12,13 @@
         <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.2/dist/svg-pan-zoom.min.js"></script>
     </head>
     <body class="codemap">
-        <header>
+        <div id="page-mask" class="d-flex position-fixed top-0 start-0 w-100 h-100 align-items-center justify-content-center bg-white">
+            <div class="d-flex flex-column justify-content-center align-items-center w-25 h-25">
+                <div class="spinner-border" role="status"></div>
+                <h2 class="mt-4">Loading...</h2>
+            </div>
+        </div>
+        <header id="main-header" class="d-none">
             <nav class="navbar navbar-expand-lg navbar-light bg-white">
                 <a class="navbar-brand" href="#"><img class="ms-2" src="./res/sedas-manager-logo.png" alt="SEDAS manager logo" id="sedas-icn"></a>
                 <button class="navbar-toggler me-4" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,8 +44,21 @@
                 </div>
             </nav>
         </header>
-        <pre class="mermaid bg-dark" id="map-container">
-        </pre>
+        <div>
+            <div class="pre-controls position-absolute d-flex flex-column gap-2 p-4 end-0">
+                <div class="d-flex justify-content-center">
+                    <button class="w-50" id="zoom-in">+</button>
+                </div>
+                <div>
+                    <button id="reset">Reset</button>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button class="w-50" id="zoom-out">-</button>
+                </div>
+            </div>
+            <pre class="mermaid bg-dark h-100" id="map-container">
+            </pre>
+        </div>
 
         <custom-footer></custom-footer>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
@@ -48,41 +67,75 @@
         <link rel="stylesheet" href="./styles/index.css">
 
         <script type="module">
+            var first_load = false
+
             async function load_diagram(button, diag_name) {
                 // Unactive all buttons
                 $(".nav-item-button").removeClass("active")
                 $(button).addClass("active")
 
-                console.log("Loading diagram", diag_name)
+                try{
+                    console.log("Loading diagram", diag_name)
                 
-                const file_path = "./charts/" + diag_name
-                const res = await fetch(file_path)
-                const content = await res.text()
-                
-                const container = $("#map-container")
-                container.empty()
+                    const file_path = "./charts/" + diag_name
+                    const res = await fetch(file_path)
+                    const content = await res.text()
+                    
+                    const container = $("#map-container")
+                    container.empty()
 
-                const id = 'svg-' + Math.round(Math.random() * 1000).toString()
-                const { svg } = await mermaid.render(id, content)
-                container.html(svg)
+                    const id = 'svg-' + Math.round(Math.random() * 1000).toString()
+                    const { svg } = await mermaid.render(id, content)
+                    container.html(svg)
 
-                // Apply SVG pan zoom
-                const svg_element = document.querySelector(`svg#${id}`)
-                svg_element.removeAttribute("style")
-                svg_element.style.width = '100%'
-                svg_element.style.height = '100%'
-                svgPanZoom(svg_element, {
-                    zoomEnabled: true,
-                    controlIconsEnabled: true, // Adds +/- buttons
-                    zoomScaleSensitivity: 0.4,
-                    fit: true,
-                    center: true,
-                    minZoom: 0.1,
-                    maxZoom: 10
-                })
+                    // Apply SVG pan zoom
+                    const svg_element = document.querySelector(`svg#${id}`)
+                    svg_element.removeAttribute("style")
+                    svg_element.style.width = '100%'
+                    svg_element.style.height = '100%'
+                    const pan_zoom_obj = svgPanZoom(svg_element, {
+                        zoomEnabled: true,
+                        controlIconsEnabled: false, // Adds +/- buttons
+                        zoomScaleSensitivity: 0.4,
+                        fit: true,
+                        center: true,
+                        minZoom: 0.1,
+                        maxZoom: 10
+                    })
 
-                // Update URL without reloading page
-                window.history.pushState({}, '', `?file=${diag_name}`);
+                    // Setting SVG pan zoom custom controls
+                    $("#zoom-in").on("click", (event) => {
+                        event.preventDefault()
+                        pan_zoom_obj.zoomIn()
+                    })
+                    $("#zoom-out").on("click", (event) => {
+                        event.preventDefault()
+                        pan_zoom_obj.zoomOut()
+                    })
+                    $("#reset").on("click", (event) => {
+                        event.preventDefault()
+                        pan_zoom_obj.resetZoom()
+                    })
+
+                    // Update URL without reloading page
+                    window.history.pushState({}, '', `?file=${diag_name}`);
+                }
+                catch(error) {
+                    console.error("Failed to load diagram: ", error)
+                    alert("Error loading diagram. Check console")
+                }
+                finally {
+                    const page_mask = $("#page-mask")
+                    const main_header = $("#main-header")
+
+                    if (first_load) {
+                        main_header.removeClass("d-none")
+                        page_mask.fadeOut(400, () => {
+                            page_mask.addClass("d-none")
+                        })
+                        first_load = false
+                    }
+                }
             }
 
             function load_button(head, name) {
@@ -118,6 +171,7 @@
             })
 
             // load the first diagram by default
+            first_load = true
             $(".nav-item-button").first().trigger("click")
         </script>
     </body>

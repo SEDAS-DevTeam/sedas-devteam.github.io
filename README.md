@@ -32,5 +32,5 @@ chmod +x ./server.py # make executable
 - [x] Add used tech stack here in README
 - [x] Add youtube logo to website
 - [x] Implement scroll on codemap
-- [ ] Add loader in codemap
-- [ ] Implement custom buttons on svg-pan-zoom
+- [x] Add loader in codemap
+- [x] Implement custom buttons on svg-pan-zoom
