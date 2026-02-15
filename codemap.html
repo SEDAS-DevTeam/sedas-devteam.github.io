@@ -45,7 +45,7 @@
             </nav>
         </header>
         <div>
-            <div class="pre-controls position-absolute d-flex flex-column gap-2 p-4 end-0">
+            <div class="pre-controls d-none position-absolute d-flex flex-column gap-2 p-4 end-0">
                 <div class="d-flex justify-content-center">
                     <button class="w-50" id="zoom-in">+</button>
                 </div>
@@ -127,9 +127,11 @@
                 finally {
                     const page_mask = $("#page-mask")
                     const main_header = $("#main-header")
+                    const controls = $(".pre-controls")
 
                     if (first_load) {
                         main_header.removeClass("d-none")
+                        controls.removeClass("d-none")
                         page_mask.fadeOut(400, () => {
                             page_mask.addClass("d-none")
                         })
