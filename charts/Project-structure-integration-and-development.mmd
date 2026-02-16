@@ -1,8 +1,5 @@
 ---
 title: SEDAS project Structure, Integration and Development
-config:
-    flowchart:
-        curve: stepBefore
 ---
 flowchart TD
     subgraph SEDAS documentation
@@ -11,6 +8,26 @@ flowchart TD
     end
 
     subgraph SEDAS website
+        direction TB
+    end
+
+    subgraph AI_backend[ ]
+        direction TB
+        back_A[SEDAS AI backend]
+        back_A --> whi_A
+        back_A e25@--> back_B[AI backend handling]
+    end
+
+    subgraph ATC_whisper[ ]
+        direction TB
+        whi_A[ATC Whisper Project]
+        whi_A e22@--> whi_B["Main (Training on **ATCOSIM** dataset)"]
+        whi_A e21@--> whi_C["Model Playground"]
+        whi_C --> whi_D["Whisper-ATC-czech-full **Weights**"]
+        whi_C e20@--> whi_E[Other models]
+    end
+
+    subgraph MapBuilder[SEDAS MapBuilder]
         direction TB
     end
 
@@ -72,12 +89,40 @@ flowchart TD
             c_A e9@--> c_C[Module-Socket-Communication]
         end
 
+        subgraph Module[Module Management]
+            direction TB
+            mod_A[Modules Main]
+            mod_A --> AI_backend
+            mod_A e16@--> mod_C[General Module Registry]
+            mod_A e12@--> mod_B[General Module Management]
+        end
+
+        subgraph Plugin[Plugin Management]
+            direction TB
+            plu_A[Plugins Main]
+            plu_A e19@--> MapBuilder
+            plu_A e17@--> plu_B[General Plugin Registry]
+            plu_A e18@--> plu_C[General Plugin Management]
+        end
+
+        subgraph Bridge[OS Bridge]
+            direction TB
+            bri_A[Bridge Main]
+            bri_A e13@--> Linux
+            bri_A e14@--> Windows
+            bri_A e15@--> MacOS
+        end
+
         m_A[SEDAS Core] --- m_E[SEDAS Backend]
-        m_E e5@--> m_F[OS Bridge]
-        m_E ~~~ updater
-        m_E --> u_A
-        m_E ~~~ Communication
-        m_E --> c_A
+        m_E e5@--> Bridge
+
+        m_E e24@--> updater
+        
+        m_E e23@--> Communication
+    
+        m_E e10@--> Module
+
+        m_E e11@--> Plugin
     end
 
     classDef animate stroke-dasharray: 9,5,stroke-dashoffset: 900,animation: dash 25s linear infinite;
@@ -86,7 +131,7 @@ flowchart TD
     classDef dotted fill:none,stroke:none,color:#fff,stroke-width:0px,font-size:40px,letter-spacing:10px;
     classDef todo stroke-width:2px,stroke-dasharray: 5 5;
 
-    class e1,e2,e3,e4,e5,e6,e7,e8,e9 animate
+    class e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12,e13,e14,e15,e16,e17,e18,e19,e20,e21,e22,e23,e24,e25 animate
     class Dots1,Dots2 dotted
     class Row1,Weather_Col,Embed_Col,Dep_Arr_Col,Dots_Col invisible_container
     class Empty1,Empty2,Empty3 invisible_node
