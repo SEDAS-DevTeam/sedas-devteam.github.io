@@ -35,3 +35,4 @@ chmod +x ./server.py # make executable
 - [x] Add loader in codemap
 - [x] Implement custom buttons on svg-pan-zoom
 - [x] Fix broken codemap loading, mark off as done in charts
+- [x] Page backgroun broken
