@@ -34,10 +34,6 @@
                 </div>
             </nav>
             <nav class="navbar navbar-expand-lg navbar-light bg-white">
-                <button class="navbar-toggler me-4" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <i class="navbar-icon fa-solid fa-bars m-0 fs-2"></i>
-                </button>
-
                 <div class="collapse navbar-collapse me-4 ms-2" id="navbarSupportedContent">
                     <ul class="navbar-nav gap-2" id="codemap-nav">
                     </ul>
@@ -123,6 +119,9 @@
                 catch(error) {
                     console.error("Failed to load diagram: ", error)
                     alert("Error loading diagram. Check console")
+                    
+                    // Find and manually destroy the dsvg object
+                    $("[id^='dsvg'], [id^='d-svg']").remove();
                 }
                 finally {
                     const page_mask = $("#page-mask")

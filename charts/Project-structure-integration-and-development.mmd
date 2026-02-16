@@ -2,14 +2,12 @@
 title: SEDAS project Structure, Integration and Development
 ---
 flowchart TD
-    subgraph SEDAS documentation
-        direction TB
-            C --> D
-    end
 
-    subgraph SEDAS website
-        direction TB
-    end
+    main_A[Project Development Framework]
+    main_A --> web
+    main_A --> docs
+    main_A -- Linked using representative container not to break **diagram structure** --> sedas_small_container
+    main_A --> sedas_dev_tools
 
     subgraph AI_backend[ ]
         direction TB
@@ -38,10 +36,19 @@ flowchart TD
         u_A e8@--> u_D[Fetching updates]
     end
 
-    subgraph SEDAS manager
+    subgraph sedas_small_container[ ]
+        cont_header[SEDAS manager]
+    end
+
+    subgraph sedas_dev_tools[Dev tools and local testing]
+        direction LR
+        dev_A[Zed editor Debug setup] ~~~ dev_B[VSCode Debug setup]
+    end
+
+    subgraph sedas["<span style='font-size:30px; white-space:nowrap;'>SEDAS manager</span>"]
         m_A[SEDAS Core] -- Linked using Vite --- m_B[SEDAS Frontend]
-        m_B e1@--> Virt
-        m_B e2@--> Other
+        m_B --> Virt
+        m_B --> Other
         m_B --> m_D[Controller GUI]
 
         subgraph Virt[Virtual Radar environment]
@@ -118,11 +125,25 @@ flowchart TD
 
         m_E e24@--> updater
         
-        m_E e23@--> Communication
+        m_E --> Communication
     
         m_E e10@--> Module
 
-        m_E e11@--> Plugin
+        m_E --> Plugin
+    end
+
+    subgraph docs[SEDAS documentation]
+        direction TB
+        docs_A[Docs] e1@--> docs_B[User manual]
+        docs_A e2@--> docs_C[ATC theory]
+        docs_A e26@--> docs_D[Technical background]
+        docs_A e27@--> docs_E[Tools]
+        docs_E e28@--> docs_F[Automatic Translation]
+    end
+
+    subgraph web[SEDAS website]
+        direction LR
+        web_A[Website] ~~~ web_B[Codemap]
     end
 
     classDef animate stroke-dasharray: 9,5,stroke-dashoffset: 900,animation: dash 25s linear infinite;
@@ -131,8 +152,8 @@ flowchart TD
     classDef dotted fill:none,stroke:none,color:#fff,stroke-width:0px,font-size:40px,letter-spacing:10px;
     classDef todo stroke-width:2px,stroke-dasharray: 5 5;
 
-    class e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12,e13,e14,e15,e16,e17,e18,e19,e20,e21,e22,e23,e24,e25 animate
+    class e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e12,e13,e14,e15,e16,e17,e18,e19,e20,e21,e22,e24,e25,e26,e27,e28 animate
     class Dots1,Dots2 dotted
     class Row1,Weather_Col,Embed_Col,Dep_Arr_Col,Dots_Col invisible_container
-    class Empty1,Empty2,Empty3 invisible_node
-    class mon_C,virt_A,virt_B todo
+    class Empty1,Empty2,Empty3,cont_header invisible_node
+    class mon_C,virt_A,virt_B,web_A,web_B,dev_A,dev_B todo
