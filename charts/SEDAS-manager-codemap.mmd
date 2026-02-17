@@ -1,6 +1,76 @@
-graph TD
-    A[Very cool] --> B(Very cool v2)
-    B --> C{Doing some rando stuff}
-    B --> D{Doing some rando stuff v2}
-    C --> E((Circel))
-    D --> E
+flowchart LR
+    subgraph invoke_tools[tasks.py]
+        direction TB
+        tool_build[**invoke build**]
+        tool_dev[**invoke devel app**]
+        tool_compile[**invoke compile**]
+    end
+
+    subgraph preload[preload.ts]
+        direction TB
+        pre_parse["parse_args()"] --> invs1[Parsing system argv]
+
+    end
+
+    subgraph package["App packaging (**TODO**)"]
+        direction LR
+        package_main[Packager main]
+
+        package_main -- updater package as linux executable --> Linux
+        package_main -- probably MSI or something like that --> Windows
+        package_main -- honestly I have zero clue --> MacOS
+
+        Linux --> package_github[Github publish]
+        Windows --> package_github
+        MacOS --> package_github
+
+    end
+
+    subgraph deploy["Local deployment"]
+        deploy_updater["Updater initialization"]
+    end
+
+    subgraph main_dev[main_dev.ts]
+        dev_argv["parse_args() run"] --> dev_main_app["MainApp() object init"]
+    end
+
+    subgraph main_prod[main_prod.ts]
+        prod_argv["parse_args() run"] --> prod_main_app["MainApp() object init"]
+    end
+
+    subgraph sedas_backend[SEDAS backend]
+        subgraph main_lib[main_lib.ts]
+            subgraph os_bridge[OSBridge]
+                direction TB
+                check_env["check_env()"] --> get_info["get_info()"]
+            end
+
+            subgraph main_app["MainApp()"]
+                subgraph main_app_constructor[constructor]
+                    os_bridge_init["new OSBridge()"] --> os_bridge
+                    os_bridge_init -. "only if check_env() finds any problems regarding the setup environment" .-> reload["reload()"] --> invs3[Reload app with additional arguments]
+                end
+            end
+        end
+
+        subgraph app_config[app_config.ts]
+
+        end
+
+        main_lib <-- All the Window definitions and Interfaces --> app_config
+    end
+
+    tool_dev -- "Calls electron devel script pointing to main_dev.ts and also passing additional argvs" --> main_dev
+    tool_build -- "Packages the whole app into downloadable tarfile, packages the updater" --> package -. Invoked by user download and execution .-> deploy
+    tool_compile -- "Compiles frontend/backend changes, used on development" --> invs2[ ... ]
+
+    dev_argv <--> preload
+
+    dev_main_app <--> main_lib
+
+    prod_argv <--> preload
+
+    prod_main_app <--> main_lib
+
+    classDef invisible_node fill:none,stroke:none,color:#fff,stroke-width:0px;
+    class invs1,invs2,invs3 invisible_node

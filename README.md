@@ -36,3 +36,4 @@ chmod +x ./server.py # make executable
 - [x] Implement custom buttons on svg-pan-zoom
 - [x] Fix broken codemap loading, mark off as done in charts
 - [x] Page backgroun broken
+- [ ] Add absolute-positioned desc explaining all the diagram stuff
